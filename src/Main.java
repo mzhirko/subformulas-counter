@@ -7,6 +7,7 @@
 import config.Config;
 import parser.Parser;
 
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class Main {
         System.out.println("\nExpression : " + expression + "\n");
         Parser parser = null;
         try {
-            parser = new Parser(expression);
+            parser = new Parser(expression, 3);
         }
         catch (Exception Exception){
             System.out.println("Invalid syntax");
