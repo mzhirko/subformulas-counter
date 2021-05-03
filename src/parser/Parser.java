@@ -1,6 +1,6 @@
 //********************************************************************************************
 // Лабораторная работа №1 по дисциплине ЛОИС
-// Вариант A: Подсчитать количество подформул в формуле сокращенного языка логики высказываний.
+// Вариант A: Подсчитать количество подформул в формуле сокращенного языка логики высказываний на заданном уровне.
 // Выполнена студенткой группы 821701 БГУИР Жирко Марией Сергеевной
 // Класс предназначен для парсинга формул
 
@@ -9,27 +9,27 @@ package parser;
 import config.Config;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Parser {
     private final String EXPRESSION;
 
     private String message;
 
-    private final List<String> subFormulas;
-    private final List<String> uniqueSubFormulas;
+    private List<String> subFormulas;
+    private List<String> uniqueSubFormulas;
     private final Set<String> ELEMENTS;
     private final List<String> ATOMS;
 
-    public Parser(String expression) throws Exception{
+    public Parser(String expression, int depth) throws Exception {
         this.EXPRESSION = expression;
         ELEMENTS = new HashSet<>();
         ATOMS = new ArrayList<>();
         subFormulas = new ArrayList<>();
-        uniqueSubFormulas = new ArrayList<>();
         message = "";
         try {
 
-            if (expression.contains("!!")){
+            if (expression.contains("!!")) {
                 System.out.println("Invalid syntax!");
                 System.exit(0);
             }
@@ -52,27 +52,50 @@ public class Parser {
 
             // finds
             searchSubFormulas(tree);
+
+            System.out.println("Number of subformulas overall: " + (subFormulas.stream().distinct().count()));
+            subFormulas = new ArrayList<>();
+            searchSubFormulas(tree, 1, depth);
             if (ATOMS.size() != ATOMS.stream().distinct().count()) {
                 throw new FormulaException(9);
             }
-
-            for (int i = 1; i<subFormulas.size(); i++) {
-                if (!uniqueSubFormulas.contains(subFormulas.get(i))) {
-                    uniqueSubFormulas.add(subFormulas.get(i));
-                }
-            }
+            uniqueSubFormulas = subFormulas.stream().distinct().collect(Collectors.toList());
+//            for (int i = 1; i < subFormulas.size(); i++) {
+//                if (!uniqueSubFormulas.contains(subFormulas.get(i))) {
+//                    uniqueSubFormulas.add(subFormulas.get(i));
+//                }
+//            }
 
             int i = 0;
+//            System.out.println("The number of subformulas: " + (subFormulas.stream().distinct().count()));
+            System.out.println("Depth: " + depth);
+            System.out.println("Number of subformulas on a specified depth: " + (subFormulas.size()));
+            for (i = 0; i < subFormulas.size(); i++) {
+                System.out.println((i + 1) + ". " + subFormulas.get(i));
+            }
 
-            System.out.println("The number of subformulas: " + (uniqueSubFormulas.size() + 1));
-            System.out.println("1. " + expression);
-            for (i = 0; i < uniqueSubFormulas.size(); i ++){
-                System.out.println((i + 2) + ". " + uniqueSubFormulas.get(i));
+            System.out.println("Number of unique subformulas on a specified depth: " + (uniqueSubFormulas.stream().distinct().count()));
+            for (i = 0; i < uniqueSubFormulas.size(); i++) {
+                System.out.println((i + 1) + ". " + uniqueSubFormulas.get(i));
             }
 
         } catch (FormulaException FormulaException) {
             message = "Formula Error: ";
             message += FormulaException.getMessage();
+        }
+    }
+
+    private void searchSubFormulas(ExpressionTree tree, int level, int depth) {
+        if (level <= depth) {
+            if (level == depth){
+                subFormulas.add(tree.getExpression());
+            }
+            if (Objects.nonNull(tree.getLeft())) {
+                searchSubFormulas(tree.getLeft(), level + 1, depth);
+            }
+            if (Objects.nonNull(tree.getRight())) {
+                searchSubFormulas(tree.getRight(), level + 1, depth);
+            }
         }
     }
 
@@ -135,7 +158,7 @@ public class Parser {
 
     private void searchSubFormulas(ExpressionTree tree) {
         if (!"!".equals(tree.getOperation())) {
-            if (!tree.getExpression().equals("1") && !tree.getExpression().equals("0")){
+            if (!tree.getExpression().equals("1") && !tree.getExpression().equals("0")) {
                 subFormulas.add(tree.getExpression());
             }
             if (tree.getOperation() != null) {
@@ -145,7 +168,7 @@ public class Parser {
                 searchSubFormulas(tree.getRight());
             }
         } else {
-            if (!tree.getExpression().equals("1") && !tree.getExpression().equals("0")){
+            if (!tree.getExpression().equals("1") && !tree.getExpression().equals("0")) {
                 subFormulas.add(tree.getExpression());
             }
             subFormulas.add(tree.getExpression());

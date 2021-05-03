@@ -1,11 +1,12 @@
 //********************************************************************************************
 // Лабораторная работа №1 по дисциплине ЛОИС
-// Вариант A: Подсчитать количество подформул в формуле сокращенного языка логики высказываний.
+// Вариант A: Подсчитать количество подформул в формуле сокращенного языка логики высказываний на заданном уровне.
 // Выполнена студенткой группы 821701 БГУИР Жирко Марией Сергеевной
 // Класс предназначен для проверки формулы
 
 import config.Config;
 import parser.Parser;
+
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,7 +34,7 @@ public class Main {
         System.out.println("\nExpression : " + expression + "\n");
         Parser parser = null;
         try {
-            parser = new Parser(expression);
+            parser = new Parser(expression, 3);
         }
         catch (Exception Exception){
             System.out.println("Invalid syntax");
