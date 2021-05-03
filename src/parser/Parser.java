@@ -1,6 +1,6 @@
 //********************************************************************************************
 // Лабораторная работа №1 по дисциплине ЛОИС
-// Вариант A: Подсчитать количество подформул в формуле сокращенного языка логики высказываний.
+// Вариант A: Подсчитать количество подформул в формуле сокращенного языка логики высказываний на заданном уровне.
 // Выполнена студенткой группы 821701 БГУИР Жирко Марией Сергеевной
 // Класс предназначен для парсинга формул
 
@@ -21,7 +21,7 @@ public class Parser {
     private final Set<String> ELEMENTS;
     private final List<String> ATOMS;
 
-    public Parser(String expression, int deep) throws Exception {
+    public Parser(String expression, int depth) throws Exception {
         this.EXPRESSION = expression;
         ELEMENTS = new HashSet<>();
         ATOMS = new ArrayList<>();
@@ -53,9 +53,9 @@ public class Parser {
             // finds
             searchSubFormulas(tree);
 
-            System.out.println("The number of subformulas: " + (subFormulas.stream().distinct().count()));
+            System.out.println("Number of subformulas overall: " + (subFormulas.stream().distinct().count()));
             subFormulas = new ArrayList<>();
-            searchSubFormulas(tree, 1, deep);
+            searchSubFormulas(tree, 1, depth);
             if (ATOMS.size() != ATOMS.stream().distinct().count()) {
                 throw new FormulaException(9);
             }
@@ -68,7 +68,13 @@ public class Parser {
 
             int i = 0;
 //            System.out.println("The number of subformulas: " + (subFormulas.stream().distinct().count()));
-            System.out.println("Deep: " + deep);
+            System.out.println("Depth: " + depth);
+            System.out.println("Number of subformulas on a specified depth: " + (subFormulas.size()));
+            for (i = 0; i < subFormulas.size(); i++) {
+                System.out.println((i + 1) + ". " + subFormulas.get(i));
+            }
+
+            System.out.println("Number of unique subformulas on a specified depth: " + (uniqueSubFormulas.stream().distinct().count()));
             for (i = 0; i < uniqueSubFormulas.size(); i++) {
                 System.out.println((i + 1) + ". " + uniqueSubFormulas.get(i));
             }
@@ -79,14 +85,16 @@ public class Parser {
         }
     }
 
-    private void searchSubFormulas(ExpressionTree tree, int level, int deep) {
-        if (level <= deep) {
-            subFormulas.add(tree.getExpression());
+    private void searchSubFormulas(ExpressionTree tree, int level, int depth) {
+        if (level <= depth) {
+            if (level == depth){
+                subFormulas.add(tree.getExpression());
+            }
             if (Objects.nonNull(tree.getLeft())) {
-                searchSubFormulas(tree.getLeft(), level + 1, deep);
+                searchSubFormulas(tree.getLeft(), level + 1, depth);
             }
             if (Objects.nonNull(tree.getRight())) {
-                searchSubFormulas(tree.getRight(), level + 1, deep);
+                searchSubFormulas(tree.getRight(), level + 1, depth);
             }
         }
     }

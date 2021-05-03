@@ -1,6 +1,6 @@
 //********************************************************************************************
 // Лабораторная работа №1 по дисциплине ЛОИС
-// Вариант A: Подсчитать количество подформул в формуле сокращенного языка логики высказываний.
+// Вариант A: Подсчитать количество подформул в формуле сокращенного языка логики высказываний на заданном уровне.
 // Выполнена студенткой группы 821701 БГУИР Жирко Марией Сергеевной
 // Класс предназначен для указания файла с формулой для проверки
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Config {
 
-    public static final String FILE_NAME = "4";
+    public static final String FILE_NAME = "1";
     public static final String FILE_FORMAT = "txt";
     public static final String IN_FILE_PATH = System.getProperty("user.dir") + "/files/in/" + FILE_NAME + "." + FILE_FORMAT;
     public static final List<String> SYMBOLS = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "0"));
